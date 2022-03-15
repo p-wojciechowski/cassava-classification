@@ -16,6 +16,7 @@ from models import CassavaDataset, LightningModelWrapper, MlpMixer
 DATASET_DIR = "./data"
 BATCH_SIZE = 16
 WEIGHTED_LOSS = False
+LEARNING_RATE = 0.001
 
 augmentations = A.Compose(
     [
@@ -63,7 +64,7 @@ model_checkpoint = ModelCheckpoint(monitor="val_loss", mode="min", dirpath="chec
 trainer = pl.Trainer(max_epochs=6, logger=tb_logger, log_every_n_steps=5,
                      callbacks=[early_stopping, model_checkpoint])
 
-pl_mlp = LightningModelWrapper(mlp, 0.001, weights)
+pl_mlp = LightningModelWrapper(mlp, LEARNING_RATE, weights)
 trainer.fit(pl_mlp, train_dataloader, val_dataloader)
 
 

@@ -1,11 +1,11 @@
 import streamlit as st
 from PIL import Image
 
-from eval import load_class_names, predict, prepare_model, preprocess_image
+from eval import load_class_data, predict, prepare_model, preprocess_image
 
 
 def main():
-    class_names = load_class_names('label_num_to_disease_map.json')
+    class_data = load_class_data('label_num_to_disease_map.json')
     model = prepare_model('INCEPTION')
     st.title("Cassava Disease Classification")
 
@@ -18,9 +18,9 @@ def main():
 
         predicted_class = predict(preprocess_image(image), model)
 
-        st.markdown(f"**Predicted class:** {class_names[predicted_class][0]}")
-        if predicted_class != len(class_names) - 1:
-            st.markdown(f"**[Wikipedia page]({class_names[predicted_class][1]}) about disease.**")
+        st.markdown(f"**Predicted class:** {class_data[predicted_class][0]}")
+        if predicted_class != len(class_data) - 1:
+            st.markdown(f"**[Wikipedia page]({class_data[predicted_class][1]}) about disease.**")
 
 
 if __name__ == "__main__":
