@@ -5,7 +5,9 @@ Leaf disease image classification model deployed with Streamlit. Project contain
 - `main.py` - Streamlit server code
 - `eval.py` - supplementary functions for model inference in Streamlit
 - `models.py` - model definitions and Pytorch Lightning model wrapper
-- `train.py` - exemplary training run with early stopping and tensorboard logging.
+- `train.py` - training script with early stopping and tensorboard logging.
+
+
 
 ### Data
 Dataset comes from [Cassava Leaf Disease Kaggle competition](https://www.kaggle.com/c/cassava-disease/data)[2] as .png files labeled with `.csv` file.

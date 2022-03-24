@@ -6,6 +6,7 @@ from eval import load_class_data, predict, prepare_model, preprocess_image
 
 def main():
     class_data = load_class_data("label_num_to_disease_map.json")
+    # model selection with string for future drop-down menu
     model = prepare_model("INCEPTION")
     st.title("Cassava Disease Classification")
 
