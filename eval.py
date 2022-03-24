@@ -14,19 +14,18 @@ def preprocess_image(img: Image.Image) -> torch.Tensor:
     transform = A.Compose(
         [
             A.Resize(299, 299),
-            A.Normalize(mean=(0, 0, 0),
-                        std=(1, 1, 1), always_apply=True),
-            ToTensorV2()
+            A.Normalize(mean=(0, 0, 0), std=(1, 1, 1), always_apply=True),
+            ToTensorV2(),
         ]
     )
     img = np.asarray(img)
-    img = transform(image=img)['image']
+    img = transform(image=img)["image"]
     return img
 
 
 @st.cache
 def load_class_data(path: str) -> list:
-    with open(path, 'r') as file:
+    with open(path, "r") as file:
         file_data = file.read()
     class_data = json.loads(file_data)
     class_data = list(class_data.values())
@@ -43,10 +42,13 @@ def predict(img: torch.Tensor, model: LightningModelWrapper) -> torch.Tensor:
 
 @st.cache
 def prepare_model(model_name: str) -> LightningModelWrapper:
-    torch.hub.set_dir('torchhub')
-    if model_name == 'INCEPTION':
+    torch.hub.set_dir("torchhub")
+    if model_name == "INCEPTION":
         inception_core = TransferedInception()
-        model = LightningModelWrapper.load_from_checkpoint("model_parameters/inceptionv3.ckpt",
-                                                           model=inception_core, learning_rate=0.01)
+        model = LightningModelWrapper.load_from_checkpoint(
+            "model_parameters/inceptionv3.ckpt",
+            model=inception_core,
+            learning_rate=0.01,
+        )
         model.eval()
         return model

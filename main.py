@@ -5,8 +5,8 @@ from eval import load_class_data, predict, prepare_model, preprocess_image
 
 
 def main():
-    class_data = load_class_data('label_num_to_disease_map.json')
-    model = prepare_model('INCEPTION')
+    class_data = load_class_data("label_num_to_disease_map.json")
+    model = prepare_model("INCEPTION")
     st.title("Cassava Disease Classification")
 
     image_file = st.file_uploader("Upload your image", type=["png", "jpg", "jpeg"])
@@ -20,7 +20,9 @@ def main():
 
         st.markdown(f"**Predicted class:** {class_data[predicted_class][0]}")
         if predicted_class != len(class_data) - 1:
-            st.markdown(f"**[Wikipedia page]({class_data[predicted_class][1]}) about disease.**")
+            st.markdown(
+                f"**[Wikipedia page]({class_data[predicted_class][1]}) about disease.**"
+            )
 
 
 if __name__ == "__main__":
