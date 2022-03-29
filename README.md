@@ -7,6 +7,7 @@ Leaf disease image classification model deployed with Streamlit. Project contain
 - `main.py` - Streamlit server code
 - `eval.py` - supplementary functions for model inference in Streamlit
 - `models.py` - model definitions and Pytorch Lightning model wrapper
+- `datasets.py` - contains CassavaDataset class
 - `train.py` - training script with early stopping and tensorboard logging.
 
 
