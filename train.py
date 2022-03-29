@@ -13,7 +13,8 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, Subset
 
-from models import CassavaDataset, LightningModelWrapper, MlpMixer, TransferedInception
+from models import LightningModelWrapper, MlpMixer, TransferredInception
+from datasets import CassavaDataset
 
 parser = argparse.ArgumentParser()
 
@@ -45,6 +46,13 @@ parser.add_argument(
     default="default",
     help="Experiment name for Tensorboard logger.",
 )
+parser.add_argument(
+    "-w",
+    "--num-workers",
+    type=int,
+    default=0,
+    help="Number of processes for training dataloader.",
+)
 params = vars(parser.parse_args())
 
 if not os.path.isdir(params["dataset_dir"]):
@@ -59,6 +67,7 @@ DATASET_DIR = params["dataset_dir"]
 BATCH_SIZE = params["batch_size"]
 WEIGHTED_LOSS = params["weighted_loss"]
 LEARNING_RATE = params["learning_rate"]
+NUM_WORKERS = params["num_workers"]
 
 if params["architecture"] == "mlpmixer":
     IMAGE_SIZE = 448
@@ -73,7 +82,7 @@ if params["architecture"] == "mlpmixer":
     )
 elif params["architecture"] == "t-inception":
     IMAGE_SIZE = 299
-    model = TransferedInception()
+    model = TransferredInception()
 else:
     raise Exception("Cannot find specified network architecture.")
 
@@ -106,8 +115,12 @@ train_indices, val_indices = train_test_split(
 )
 train_dataset = Subset(dataset_with_augs, train_indices)
 val_dataset = Subset(dataset_without_augs, val_indices)
-train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-val_dataloader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
+train_dataloader = DataLoader(
+    train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=NUM_WORKERS
+)
+val_dataloader = DataLoader(
+    val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS
+)
 
 if WEIGHTED_LOSS:
     df = pd.read_csv(os.path.join(DATASET_DIR, "train.csv"))

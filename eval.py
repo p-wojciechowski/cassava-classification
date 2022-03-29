@@ -7,7 +7,7 @@ import torch
 from albumentations.pytorch import ToTensorV2
 from PIL import Image
 
-from models import LightningModelWrapper, TransferedInception
+from models import LightningModelWrapper, TransferredInception
 
 
 def preprocess_image(img: Image.Image) -> torch.Tensor:
@@ -44,7 +44,7 @@ def predict(img: torch.Tensor, model: LightningModelWrapper) -> torch.Tensor:
 def prepare_model(model_name: str) -> LightningModelWrapper:
     torch.hub.set_dir("torchhub")
     if model_name == "INCEPTION":
-        inception_core = TransferedInception()
+        inception_core = TransferredInception()
         model = LightningModelWrapper.load_from_checkpoint(
             "model_parameters/inceptionv3.ckpt",
             model=inception_core,

@@ -1,55 +1,16 @@
-import os
+from typing import Tuple
 
-import albumentations as A
-import numpy as np
-import pandas as pd
 import pytorch_lightning as pl
 import torch
 import torchmetrics
 import torchvision
-from albumentations.pytorch import ToTensorV2
 from einops.layers.torch import Rearrange
-from PIL import Image
 from torch import nn
 from torch.nn import functional as F
-from torch.utils.data import Dataset
-
-
-class CassavaDataset(Dataset):
-    def __init__(
-        self, labels_file: str, img_dir: str, transform=None, img_size=(448, 448)
-    ):
-        self.img_labels = pd.read_csv(labels_file)
-        self.img_dir = img_dir
-        if transform:
-            self.transform = transform
-        else:
-            self.transform = A.Compose(
-                [
-                    A.Normalize(mean=(0, 0, 0), std=(1, 1, 1)),
-                    A.Resize(*img_size),
-                    ToTensorV2(),
-                ]
-            )
-
-    def __len__(self):
-        return len(self.img_labels)
-
-    def __getitem__(self, idx):
-        img_path = os.path.join(self.img_dir, self.img_labels.iloc[idx, 0])
-
-        image = Image.open(img_path)
-        image = np.asarray(image)
-
-        label = self.img_labels.iloc[idx, 1]
-        if self.transform:
-            image = self.transform(image=image)["image"]
-        label = torch.tensor(label).to(torch.float32)
-        return image, label
 
 
 class FullPerPatch(nn.Module):
-    def __init__(self, patch_size, in_channels, hidden_channels):
+    def __init__(self, patch_size: int, in_channels: int, hidden_channels: int):
         super().__init__()
         self.per_patch = nn.Conv2d(in_channels, hidden_channels, patch_size, patch_size)
         self.rearrange = Rearrange("b c s1 s2 -> b (s1 s2) c")
@@ -61,7 +22,7 @@ class FullPerPatch(nn.Module):
 
 
 class MlpBlock(nn.Module):
-    def __init__(self, input_size, hidden_size):
+    def __init__(self, input_size: int, hidden_size: int):
         super().__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, input_size)
@@ -74,7 +35,7 @@ class MlpBlock(nn.Module):
 
 
 class MixerBlock(nn.Module):
-    def __init__(self, channels, patches, d_s, d_c):
+    def __init__(self, channels: int, patches: int, d_s: int, d_c: int):
         super(MixerBlock, self).__init__()
         self.patch_layer_norm = nn.LayerNorm([patches, channels])
         self.mlp1 = MlpBlock(patches, d_s)
@@ -98,13 +59,21 @@ class MixerBlock(nn.Module):
 
 class MlpMixer(nn.Module):
     def __init__(
-        self, image_size, patch_size, hidden_channels, d_s, d_c, mixer_blocks, out_class
+        self,
+        image_size: Tuple[int, int, int],
+        patch_size: int,
+        hidden_channels: int,
+        d_s: int,
+        d_c: int,
+        mixer_blocks: int,
+        out_class: int,
     ):
         super().__init__()
 
         assert (
             image_size[1] * image_size[2] % patch_size * patch_size == 0
         ), "Wrong size of image and patch!"
+
         patches = int(image_size[1] * image_size[2] // (patch_size**2))
 
         self.patching = FullPerPatch(
@@ -186,7 +155,7 @@ class LightningModelWrapper(pl.LightningModule):
         return optimizer
 
 
-class TransferedInception(nn.Module):
+class TransferredInception(nn.Module):
     def __init__(self):
         super().__init__()
         self.inception = torch.hub.load(

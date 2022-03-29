@@ -1,4 +1,6 @@
 # Cassava Leaf Disease Classification - Pytorch project
+[![Black format](https://github.com/p-wojciechowski/cassava-classification/actions/workflows/black.yml/badge.svg)](https://github.com/p-wojciechowski/cassava-classification/actions/workflows/black.yml)
+
 Leaf disease image classification model deployed with Streamlit. Project contains also implemented from scratch [MLP-Mixer](https://arxiv.org/abs/2105.01601v3) [1] architecture.
 
 ### Content
