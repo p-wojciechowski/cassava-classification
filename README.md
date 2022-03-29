@@ -20,7 +20,7 @@ Dataset comes from [Cassava Leaf Disease Kaggle competition](https://www.kaggle.
 
 `TransferredInception` - class for transfering Inception_v3 architecture.
 
-`LightningModelWrapper` - Pytorch Lightning wrapper for models above (or any other for this task). Comes with logging per epoch (for better more readable learnig process plots in Tensorboard)
+`LightningModelWrapper` - Pytorch Lightning wrapper for models above (or any other for this task). Comes with logging per epoch (for more readable learnig process plots in Tensorboard)
 
 ### Deployment
 Application is served on Microsoft Azure VM with Streamlit on address: 
