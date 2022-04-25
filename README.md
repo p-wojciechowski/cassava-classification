@@ -24,7 +24,7 @@ Dataset comes from [Cassava Leaf Disease Kaggle competition](https://www.kaggle.
 
 ### Deployment
 Application is served on Microsoft Azure VM with Streamlit on address: 
-http://20.91.220.251
+~~http://20.91.220.251~~, temporarily not available.
 
 ### Used tools
 - Pytorch
