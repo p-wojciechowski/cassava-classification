@@ -23,8 +23,8 @@ Dataset comes from [Cassava Leaf Disease Kaggle competition](https://www.kaggle.
 `LightningModelWrapper` - Pytorch Lightning wrapper for models above (or any other for this task). Comes with logging per epoch (for more readable learnig process plots in Tensorboard)
 
 ### Deployment
-Application is served on Microsoft Azure VM with Streamlit on address: 
-~~http://20.91.220.251~~, temporarily not available.
+Application is served on Microsoft Azure VM with Streamlit on address:
+http://51.13.72.28
 
 ### Used tools
 - Pytorch
